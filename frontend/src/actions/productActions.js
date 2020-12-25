@@ -3,9 +3,9 @@ import {
   PRODUCT_LIST_REQUEST,
   PRODUCT_LIST_SUCCESS,
   PRODUCT_LIST_FAIL,
-  PRODUCT_DETAILS_REQUEST,
-  PRODUCT_DETAILS_SUCCESS,
-  PRODUCT_DETAILS_FAIL,
+  PRODUCT_DETAIL_REQUEST,
+  PRODUCT_DETAIL_SUCCESS,
+  PRODUCT_DETAIL_FAIL,
   PRODUCT_DELETE_SUCCESS,
   PRODUCT_DELETE_REQUEST,
   PRODUCT_DELETE_FAIL,
@@ -51,17 +51,17 @@ export const listProducts = (keyword = '', pageNumber = '') => async (
 
 export const listProductDetails = (id) => async (dispatch) => {
   try {
-    dispatch({ type: PRODUCT_DETAILS_REQUEST })
+    dispatch({ type: PRODUCT_DETAIL_REQUEST })
 
     const { data } = await axios.get(`/api/products/${id}`)
 
     dispatch({
-      type: PRODUCT_DETAILS_SUCCESS,
+      type: PRODUCT_DETAIL_SUCCESS,
       payload: data,
     })
   } catch (error) {
     dispatch({
-      type: PRODUCT_DETAILS_FAIL,
+      type: PRODUCT_DETAIL_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

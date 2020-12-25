@@ -1,30 +1,59 @@
-import express from "express";
-import dotenv from "dotenv";
-import { notFound, errorHandler} from './middleware/errorMiddleware.js'
-import connectDb from "./config/db.js";
+import path from 'path'
+import express from 'express'
+import dotenv from 'dotenv'
+import morgan from 'morgan'
+import { notFound, errorHandler } from './middleware/errorMiddleware.js'
+import connectDB from './config/db.js'
 
-import productRoutes from './routes/productRouter.js';
-import userRoutes from './routes/userRouter.js';
-import orderRouter from './routes/orderRouter.js';
-
-const app = express();
-
-app.use(express.json())
+import productRouter from './routes/productRouter.js'
+import userRouter from './routes/userRouter.js'
+import orderRouter from './routes/orderRouter.js'
+import uploadRouter from './routes/uploadRouter.js'
 
 dotenv.config()
 
-connectDb()
+connectDB()
 
-app.get('/', (req, res) => {
-    res.send("API running");
-})
+const app = express()
 
-app.use('/api/products', productRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/orders', orderRouter);
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'))
+}
 
-app.get('/api/config/paypal', (req, res) => res.send(process.env.PAYPAL_CLIENT_ID))
+app.use(express.json())
 
-app.use(notFound);
-app.use(errorHandler);
-app.listen(process.env.PORT, console.log(`Server up in ${process.env.NODE_ENV} mode on ${process.env.PORT}`))
+app.use('/api/products', productRouter)
+app.use('/api/users', userRouter)
+app.use('/api/orders', orderRouter)
+app.use('/api/upload', uploadRouter)
+
+app.get('/api/config/paypal', (req, res) =>
+  res.send(process.env.PAYPAL_CLIENT_ID)
+)
+
+const __dirname = path.resolve()
+app.use('/uploads', express.static(path.join(__dirname, '/uploads')))
+
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '/frontend/build')))
+
+  app.get('*', (req, res) =>
+    res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'))
+  )
+} else {
+  app.get('/', (req, res) => {
+    res.send('API is running....')
+  })
+}
+
+app.use(notFound)
+app.use(errorHandler)
+
+const PORT = process.env.PORT || 5000
+
+app.listen(
+  PORT,
+  console.log(
+    `Server running in ${process.env.NODE_ENV} mode on port ${PORT}`
+  )
+)
