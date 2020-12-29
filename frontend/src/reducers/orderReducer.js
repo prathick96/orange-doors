@@ -2,9 +2,9 @@ import {
   ORDER_CREATE_REQUEST,
   ORDER_CREATE_SUCCESS,
   ORDER_CREATE_FAIL,
-  ORDER_DETAILS_REQUEST,
-  ORDER_DETAILS_SUCCESS,
-  ORDER_DETAILS_FAIL,
+  ORDER_DETAIL_REQUEST,
+  ORDER_DETAIL_SUCCESS,
+  ORDER_DETAIL_FAIL,
   ORDER_PAY_REQUEST,
   ORDER_PAY_FAIL,
   ORDER_PAY_SUCCESS,
@@ -52,17 +52,17 @@ export const orderDetailsReducer = (
   action
 ) => {
   switch (action.type) {
-    case ORDER_DETAILS_REQUEST:
+    case ORDER_DETAIL_REQUEST:
       return {
         ...state,
         loading: true,
       }
-    case ORDER_DETAILS_SUCCESS:
+    case ORDER_DETAIL_SUCCESS:
       return {
         loading: false,
         order: action.payload,
       }
-    case ORDER_DETAILS_FAIL:
+    case ORDER_DETAIL_FAIL:
       return {
         loading: false,
         error: action.payload,
