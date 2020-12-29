@@ -151,9 +151,10 @@ const ProductScreen = ({ history, match }) => {
           <Row>
             <Col md={6}>
               <h2>Reviews</h2>
-              {product.review.length === 0 && <Message>No Reviews</Message>}
+              {console.log(product.reviews)}
+              {product.reviews.length === 0 && <Message>No Reviews</Message>}
               <ListGroup variant='flush'>
-                {product.review.map((review) => (
+                {product.reviews.map((review) => (
                   <ListGroup.Item key={review._id}>
                     <strong>{review.name}</strong>
                     <Rating value={review.rating} />
